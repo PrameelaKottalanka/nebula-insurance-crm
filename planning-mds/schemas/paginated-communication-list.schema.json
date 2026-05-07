@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nebula.local/schemas/paginated-communication-list.schema.json",
+  "title": "PaginatedCommunicationList",
+  "description": "Paginated response for GET /communications. F0021-S0004. Default page size is 25 (max 100). Feed appends on 'Load earlier' click — page increments, results are client-merged.",
+  "type": "object",
+  "required": ["data", "page", "pageSize", "totalCount", "totalPages"],
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "communication-event-summary.schema.json"
+      },
+      "description": "Communication events for the current page, sorted by occurredAt descending."
+    },
+    "page": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Current page number (1-based)."
+    },
+    "pageSize": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100,
+      "description": "Number of items per page. Default 25."
+    },
+    "totalCount": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of communication events for the entity (unpaged)."
+    },
+    "totalPages": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of pages given the current pageSize."
+    }
+  },
+  "additionalProperties": false
+}

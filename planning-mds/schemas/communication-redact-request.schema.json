@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nebula.local/schemas/communication-redact-request.schema.json",
+  "title": "CommunicationRedactRequest",
+  "description": "Validation rules for redacting a communication event body. F0021-S0006. Admin role required (enforced server-side). Redaction is irreversible in MVP.",
+  "type": "object",
+  "required": ["reason"],
+  "properties": {
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Required explanation for the redaction. Stored for compliance audit. Error code: reason_required."
+    }
+  },
+  "additionalProperties": false
+}

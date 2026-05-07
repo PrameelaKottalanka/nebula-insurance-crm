@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nebula.local/schemas/communication-follow-up-request.schema.json",
+  "title": "CommunicationFollowUpRequest",
+  "description": "Validation rules for creating a follow-up task linked to a communication event. F0021-S0005. The resulting TaskItem.LinkedEntityType is set to 'CommunicationEvent' and TaskItem.LinkedEntityId to the communication event ID. Only one follow-up per event in MVP (error code: follow_up_exists if already set).",
+  "type": "object",
+  "required": ["title"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Task title. Required. Error code: title_required."
+    },
+    "dueDate": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "Optional due date (ISO 8601 date only, e.g. 2026-05-14)."
+    },
+    "assignedToUserId": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "Optional internal UserId from UserProfile. Defaults to the current authenticated user if omitted."
+    },
+    "priority": {
+      "type": ["string", "null"],
+      "enum": ["Low", "Normal", "High", "Urgent", null],
+      "default": "Normal",
+      "description": "Task priority. Defaults to Normal. Error code: invalid_priority."
+    }
+  },
+  "additionalProperties": false
+}
