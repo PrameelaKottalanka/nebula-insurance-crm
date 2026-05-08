@@ -1,31 +1,31 @@
 # F0021 — Communication Hub & Activity Capture — Status
 
 **Overall Status:** In Progress
-**Last Updated:** 2026-05-06
+**Last Updated:** 2026-05-07
 
 ## Story Checklist
 
 | Story | Title | Status |
 |-------|-------|--------|
-| F0021-S0001 | Log a communication note | Not Started |
-| F0021-S0002 | Log a phone call | Not Started |
-| F0021-S0003 | Log a meeting | Not Started |
-| F0021-S0004 | View communication feed on entity | Not Started |
-| F0021-S0005 | Create follow-up task from communication | Not Started |
-| F0021-S0006 | Edit and redact a communication event | Not Started |
+| F0021-S0001 | Log a communication note | Backend Done |
+| F0021-S0002 | Log a phone call | Backend Done |
+| F0021-S0003 | Log a meeting | Backend Done |
+| F0021-S0004 | View communication feed on entity | Backend Done |
+| F0021-S0005 | Create follow-up task from communication | Backend Done |
+| F0021-S0006 | Edit and redact a communication event | Backend Done |
 | F0021-S0007 | Filter communication feed by type and date | Not Started |
 
 ## Backend Progress
 
-- [ ] CommunicationEvent entity and enums (EventType, Direction, EntityType)
-- [ ] EF configuration and migration (AddCommunicationEvents)
-- [ ] ICommunicationEventRepository + CommunicationEventRepository
-- [ ] CommunicationEventService (Log, List, GetById, Edit, Redact, CreateFollowUp)
-- [ ] DTOs (LogRequest, EditRequest, RedactRequest, SummaryDto, DetailDto)
-- [ ] CommunicationEndpoints registered in Program.cs
-- [ ] Authorization policies (communication:create, entity access ABAC checks)
-- [ ] Unit tests passing
-- [ ] Integration tests passing
+- [x] CommunicationEvent entity and enums (EventType, Direction, EntityType)
+- [x] EF configuration and migration (AddCommunicationEvents)
+- [x] ICommunicationEventRepository + CommunicationEventRepository
+- [x] CommunicationEventService (Log, List, GetById, Edit, Redact, CreateFollowUp)
+- [x] DTOs (LogRequest, EditRequest, RedactRequest, SummaryDto, DetailDto)
+- [x] CommunicationEndpoints registered in Program.cs
+- [x] Authorization policies (communication:create/read/edit/redact in policy.csv)
+- [ ] Unit tests passing (written; require Docker to run)
+- [ ] Integration tests passing (written; require Docker to run)
 
 ## Frontend Progress
 
