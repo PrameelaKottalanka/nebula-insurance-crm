@@ -54,6 +54,12 @@ import {
   taskFixture,
   timelineFixture,
   updateDocumentMetadata,
+  listCommunications,
+  createCommunication,
+  getCommunication,
+  editCommunication,
+  redactCommunication,
+  createFollowUp,
   uploadDocumentTemplate,
   uploadDocuments,
 } from './data'
@@ -64,6 +70,47 @@ function apiUrl(path: string): string {
 }
 
 export const handlers = [
+  http.get(apiUrl('/communications'), ({ request }) => {
+    return HttpResponse.json(listCommunications(new URL(request.url).searchParams))
+  }),
+
+  http.post(apiUrl('/communications'), async ({ request }) => {
+    return HttpResponse.json(createCommunication(await request.json() as never), { status: 201 })
+  }),
+
+  http.get(apiUrl('/communications/:id'), ({ params }) => {
+    const result = getCommunication(String(params.id))
+    if (!result) {
+      return HttpResponse.json({ title: 'Not found', status: 404, code: 'not_found' }, { status: 404 })
+    }
+    return HttpResponse.json(result)
+  }),
+
+  http.put(apiUrl('/communications/:id'), async ({ params, request }) => {
+    const result = editCommunication(String(params.id), await request.json() as never)
+    if (!result) {
+      return HttpResponse.json({ title: 'Not found', status: 404, code: 'not_found' }, { status: 404 })
+    }
+    return HttpResponse.json(result)
+  }),
+
+  http.post(apiUrl('/communications/:id/redact'), async ({ params, request }) => {
+    const result = redactCommunication(String(params.id), await request.json() as never)
+    if (!result) {
+      return HttpResponse.json({ title: 'Already redacted', status: 409, code: 'already_redacted' }, { status: 409 })
+    }
+    return HttpResponse.json(result)
+  }),
+
+  http.post(apiUrl('/communications/:id/follow-up'), async ({ params, request }) => {
+    const body = await request.json() as { title: string }
+    const result = createFollowUp(String(params.id), body.title)
+    if (!result) {
+      return HttpResponse.json({ title: 'Not found', status: 404, code: 'not_found' }, { status: 404 })
+    }
+    return HttpResponse.json(result, { status: 201 })
+  }),
+
   http.get(apiUrl('/dashboard/kpis'), () => HttpResponse.json(dashboardKpisFixture)),
 
   http.get(apiUrl('/dashboard/nudges'), () => HttpResponse.json(dashboardNudgesFixture)),

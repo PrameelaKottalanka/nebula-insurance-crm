@@ -29,6 +29,16 @@ export {
   reinstatePolicy,
 } from './policies'
 export {
+  createCommunication,
+  listCommunications,
+  getCommunication,
+  editCommunication,
+  redactCommunication,
+  createFollowUp,
+  resetCommunicationMockState,
+  seedCommunication,
+} from './communications'
+export {
   documentCompleteness,
   documentMetadataSchemas,
   getDocument,
