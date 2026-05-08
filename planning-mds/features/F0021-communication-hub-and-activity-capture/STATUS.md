@@ -7,13 +7,13 @@
 
 | Story | Title | Status |
 |-------|-------|--------|
-| F0021-S0001 | Log a communication note | Backend Done |
-| F0021-S0002 | Log a phone call | Backend Done |
-| F0021-S0003 | Log a meeting | Backend Done |
-| F0021-S0004 | View communication feed on entity | Backend Done |
-| F0021-S0005 | Create follow-up task from communication | Backend Done |
-| F0021-S0006 | Edit and redact a communication event | Backend Done |
-| F0021-S0007 | Filter communication feed by type and date | Not Started |
+| F0021-S0001 | Log a communication note | Done |
+| F0021-S0002 | Log a phone call | Done |
+| F0021-S0003 | Log a meeting | Done |
+| F0021-S0004 | View communication feed on entity | Done |
+| F0021-S0005 | Create follow-up task from communication | Done |
+| F0021-S0006 | Edit and redact a communication event | Done |
+| F0021-S0007 | Filter communication feed by type and date | Deferred |
 
 ## Backend Progress
 
@@ -29,23 +29,23 @@
 
 ## Frontend Progress
 
-- [ ] CommunicationEvent types and API hooks (useCommunicationEvents, useLogCommunication, useEditCommunication, useRedactCommunication)
-- [ ] Communications tab added to Account, Broker, Submission, Policy, Renewal detail pages
-- [ ] CommunicationFeed (month grouping, pagination, empty state)
-- [ ] CommunicationEventCard (Note, Call, Meeting variants; redacted state; edited label)
-- [ ] LogCommunicationModal (Note / Call / Meeting tabs)
-- [ ] CreateFollowUpModal (post-log task creation)
-- [ ] Filter bar — S0007 (Phase 1)
+- [x] CommunicationEvent types and API hooks (useCommunicationEvents, useLogCommunication, useEditCommunication, useRedactCommunication)
+- [x] Communications tab added to Account, Broker, Submission, Policy, Renewal detail pages
+- [x] CommunicationFeed (month grouping, pagination, empty state)
+- [x] CommunicationEventCard (Note, Call, Meeting variants; redacted state; edited label)
+- [x] LogCommunicationModal (Note / Call / Meeting tabs)
+- [x] CreateFollowUpModal (inline in CommunicationEventCard)
+- [ ] Filter bar — S0007 (Phase 1, deferred)
 - [ ] Component and integration tests added
 - [ ] Accessibility validation recorded
 - [ ] Responsive layout verified
 
 ## Cross-Cutting
 
-- [ ] Migration applied
+- [ ] Migration applied (requires Docker + Postgres)
 - [ ] Seed data (if applicable)
-- [ ] Bruno API collection updated for communication endpoints
-- [ ] No TODOs remain in code
+- [x] Bruno API collection updated for communication endpoints (6 requests in bruno/nebula/communications/)
+- [x] No TODOs remain in code
 
 ## Required Signoff Roles (Set in Planning)
 

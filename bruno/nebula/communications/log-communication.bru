@@ -1,0 +1,31 @@
+meta {
+  name: Log Communication
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/communications
+  auth: bearer
+  body: json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "eventType": "Note",
+    "subject": "Initial outreach",
+    "body": "Called broker to discuss renewal options.",
+    "primaryEntityType": "Broker",
+    "primaryEntityId": "{{brokerId}}"
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.id: isDefined
+  res.body.eventType: isDefined
+}

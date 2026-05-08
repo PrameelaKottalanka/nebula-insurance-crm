@@ -1,0 +1,29 @@
+meta {
+  name: Create Follow-Up Task
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/communications/{{communicationId}}/follow-up
+  auth: bearer
+  body: json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "title": "Follow up with broker about renewal terms",
+    "dueDate": "2026-05-14",
+    "priority": "High"
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.id: isDefined
+  res.body.title: isDefined
+}

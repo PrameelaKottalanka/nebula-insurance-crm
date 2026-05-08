@@ -1,0 +1,28 @@
+meta {
+  name: Edit Communication
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/communications/{{communicationId}}
+  auth: bearer
+  body: json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "body": "Updated note content after follow-up call.",
+    "subject": "Updated subject",
+    "outcome": "Agreed to proceed with renewal."
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: isDefined
+}
