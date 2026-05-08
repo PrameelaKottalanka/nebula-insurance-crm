@@ -20,8 +20,9 @@ import {
 } from '@/features/brokers';
 import { ApiError } from '@/services/api';
 import type { ContactDto } from '@/features/brokers';
+import { CommunicationFeed } from '@/features/communications';
 
-const TABS = ['Profile', 'Contacts', 'Timeline'];
+const TABS = ['Profile', 'Contacts', 'Communications', 'Timeline'];
 
 export default function BrokerDetailPage() {
   const { brokerId } = useParams<{ brokerId: string }>();
@@ -133,6 +134,9 @@ export default function BrokerDetailPage() {
                 }}
                 onDeleteContact={(contact) => setDeletingContact(contact)}
               />
+            )}
+            {activeTab === 'Communications' && (
+              <CommunicationFeed entityType="Broker" entityId={broker.id} />
             )}
             {activeTab === 'Timeline' && <BrokerTimelineTab brokerId={broker.id} />}
           </Tabs>
