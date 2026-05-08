@@ -576,3 +576,38 @@ p, MgaUser,              document_template, link,    true
 
 p, ExternalUser,         document_template, read,    true
 p, ExternalUser,         document_template, link,    true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# §4 Communication (F0021 — Communication Hub & Activity Capture)
+#
+# All internal roles can log, read, and edit communications.
+# BrokerUser: implicit DENY on all actions — no policy lines.
+# Redact: Admin only (irreversible compliance action).
+# Edit authorship/window rules (author+24h or Admin) are enforced at the
+# application layer, not here — Casbin only gates the broad action.
+# ─────────────────────────────────────────────────────────────────────────────
+
+p, DistributionUser,    communication, create, true
+p, DistributionUser,    communication, read,   true
+p, DistributionUser,    communication, edit,   true
+
+p, DistributionManager, communication, create, true
+p, DistributionManager, communication, read,   true
+p, DistributionManager, communication, edit,   true
+
+p, Underwriter,         communication, create, true
+p, Underwriter,         communication, read,   true
+p, Underwriter,         communication, edit,   true
+
+p, RelationshipManager, communication, create, true
+p, RelationshipManager, communication, read,   true
+p, RelationshipManager, communication, edit,   true
+
+p, ProgramManager,      communication, create, true
+p, ProgramManager,      communication, read,   true
+p, ProgramManager,      communication, edit,   true
+
+p, Admin,               communication, create, true
+p, Admin,               communication, read,   true
+p, Admin,               communication, edit,   true
+p, Admin,               communication, redact, true

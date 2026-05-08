@@ -140,6 +140,7 @@ builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<TaskService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TimelineService>();
+builder.Services.AddScoped<CommunicationEventService>();
 builder.Services.AddScoped<ReferenceDataService>();
 builder.Services.AddScoped<BrokerScopeResolver>();
 
@@ -284,6 +285,7 @@ app.MapDashboardEndpoints();
 app.MapTaskEndpoints();
 app.MapUserEndpoints();
 app.MapTimelineEndpoints();
+app.MapCommunicationEndpoints();
 
 app.Run();
 

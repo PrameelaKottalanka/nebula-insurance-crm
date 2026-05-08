@@ -36,6 +36,7 @@ public class AppDbContext : DbContext, IUnitOfWork
     public DbSet<ReferenceSubmissionStatus> ReferenceSubmissionStatuses => Set<ReferenceSubmissionStatus>();
     public DbSet<ReferenceRenewalStatus> ReferenceRenewalStatuses => Set<ReferenceRenewalStatus>();
     public DbSet<IdempotencyRecord> IdempotencyRecords => Set<IdempotencyRecord>();
+    public DbSet<CommunicationEvent> CommunicationEvents => Set<CommunicationEvent>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
