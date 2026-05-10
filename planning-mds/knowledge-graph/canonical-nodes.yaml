@@ -144,6 +144,16 @@ entities:
       - adr: adr:012
         section: "Decision §10"
         summary: "Templates are documents stored under <docroot>/templates/ with the same sidecar JSON shape; materialising a template into a parent record creates an independent document with provenance.source = template:{id}."
+  - id: entity:communication-event
+    label: CommunicationEvent
+    source_docs:
+      - planning-mds/features/F0021-communication-hub-and-activity-capture/PRD.md
+      - planning-mds/architecture/data-model.md
+    notes: >
+      A logged communication record (Note, Call, or Meeting) attached to a CRM entity
+      (Broker, Account, Submission, Policy, or Renewal). Internal-only in MVP — BrokerUser
+      is implicitly denied all actions. Supports 24-hour author edit window, Admin-only
+      redaction, and one follow-up TaskItem link per event.
 
 workflows:
   - id: workflow:submission
