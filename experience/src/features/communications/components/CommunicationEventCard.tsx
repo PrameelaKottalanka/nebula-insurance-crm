@@ -168,7 +168,7 @@ export function CommunicationEventCard({ event, entityType, entityId }: Props) {
                 Edit
               </button>
             )}
-            {canRedact && (
+            {canRedact && !redactOpen && (
               <button
                 type="button"
                 onClick={() => { setRedactReason(''); setRedactError(''); setRedactOpen(true); }}
@@ -206,7 +206,6 @@ export function CommunicationEventCard({ event, entityType, entityId }: Props) {
               value={editBody}
               onChange={(e) => setEditBody(e.target.value)}
               className="w-full rounded-lg border border-surface-border bg-surface-card px-3 py-2 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:ring-1 focus:ring-nebula-violet resize-none"
-              required
             />
             {editError && <p className="text-xs text-red-400">{editError}</p>}
           </div>
@@ -235,7 +234,6 @@ export function CommunicationEventCard({ event, entityType, entityId }: Props) {
             value={redactReason}
             onChange={(e) => { setRedactReason(e.target.value); setRedactError(''); }}
             placeholder="Compliance requirement, GDPR request..."
-            required
             error={redactError}
           />
           <div className="flex justify-end gap-2 pt-1">
@@ -257,7 +255,6 @@ export function CommunicationEventCard({ event, entityType, entityId }: Props) {
             value={followUpTitle}
             onChange={(e) => { setFollowUpTitle(e.target.value); setFollowUpError(''); }}
             placeholder="Follow up on..."
-            required
             error={followUpError}
           />
           <div className="flex justify-end gap-2 pt-1">

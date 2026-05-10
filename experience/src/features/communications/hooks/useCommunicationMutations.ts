@@ -15,7 +15,7 @@ export function useLogCommunication(entityType: string, entityId: string) {
     mutationFn: (body: CommunicationLogRequest) =>
       api.post<CommunicationEventSummaryDto>('/communications', body),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communications', entityType, entityId] });
+      queryClient.invalidateQueries({ queryKey: ['communications'] });
     },
   });
 }

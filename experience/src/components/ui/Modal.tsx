@@ -18,7 +18,10 @@ export function Modal({ open, onClose, title, description, children, className }
   const titleId = useId();
   const descriptionId = useId();
 
-  const handleClose = useCallback(() => onClose(), [onClose]);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  const handleClose = useCallback(() => onCloseRef.current(), []);
 
   useEffect(() => {
     if (!open) return;
@@ -86,7 +89,7 @@ export function Modal({ open, onClose, title, description, children, className }
       document.body.style.overflow = '';
       previousActiveRef.current?.focus();
     };
-  }, [open, handleClose]);
+  }, [open]); // handleClose is stable via ref; only re-run when open changes
 
   function handleBackdropClick(e: React.MouseEvent) {
     if (contentRef.current && !contentRef.current.contains(e.target as Node)) {

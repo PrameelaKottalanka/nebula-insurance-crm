@@ -1,0 +1,7 @@
+RUN v2.1.9 E:/projects/nebula-insurance-crm/experience
+
+ ✓ src/features/brokers/tests/BrokerListPage.a11y.test.tsx (1 test)
+ ✓ src/features/auth/tests/LoginPage.a11y.test.tsx (1 test)
+
+ Test Files  2 passed (2)
+      Tests  2 passed (2)

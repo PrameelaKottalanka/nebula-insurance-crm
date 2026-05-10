@@ -3610,7 +3610,7 @@ freshness:
       - experience/src/services/api.test.ts
       source_count: 49
       last_modified: '2026-05-10'
-      source_hash: fc7c4c3053bed6ad
+      source_hash: 690ffe076cac1a24
     entity:document-template:
       source_paths:
       - engine/src/Nebula.Application/DTOs/DocumentDtos.cs
@@ -5641,4 +5641,4 @@ freshness:
       - experience/src/pages/SubmissionDetailPage.tsx
       source_count: 26
       last_modified: '2026-05-10'
-      source_hash: 8fd10b818d8022c0
+      source_hash: b93c17bacb1690a4

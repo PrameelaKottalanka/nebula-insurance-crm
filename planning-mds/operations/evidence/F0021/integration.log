@@ -1,0 +1,8 @@
+RUN v2.1.9 E:/projects/nebula-insurance-crm/experience
+
+ ✓ src/pages/tests/BrokerDetailPage.integration.test.tsx (7 tests)
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+
+Note: BrokerDetailPage integration test covers communication feed rendering on the broker profile page.

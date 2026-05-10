@@ -135,6 +135,7 @@ describe('api multipart and binary helpers', () => {
       vi.fn().mockResolvedValue(new Response(new Blob(['pdf']), { status: 200 })),
     )
 
-    await expect(api.downloadBlob('/documents/doc_1/versions/latest/binary')).resolves.toBeInstanceOf(Blob)
+    const result = await api.downloadBlob('/documents/doc_1/versions/latest/binary')
+    expect(result.constructor.name).toBe('Blob')
   })
 })

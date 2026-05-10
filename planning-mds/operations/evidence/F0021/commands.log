@@ -1,0 +1,5 @@
+$ pnpm test
+$ pnpm test:integration
+$ pnpm test:accessibility
+$ pnpm test:coverage
+$ env CI=true pnpm test:visual:theme
