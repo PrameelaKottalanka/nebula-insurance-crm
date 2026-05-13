@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nebula.local/schemas/communication-edit-request.schema.json",
+  "title": "CommunicationEditRequest",
+  "description": "Validation rules for editing a communication event. F0021-S0006. At least one field must be provided (enforced by FluentValidation; error code: no_changes). Author within 24h or Admin only; enforced server-side.",
+  "type": "object",
+  "properties": {
+    "body": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "maxLength": 4000,
+      "description": "Updated body content. If provided, must be 1–4000 characters."
+    },
+    "subject": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Updated subject. If provided, must be 1–200 characters."
+    },
+    "outcome": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "maxLength": 1000,
+      "description": "Updated outcome. If provided, must be 1–1000 characters."
+    },
+    "occurredAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Corrected timestamp (ISO 8601 UTC). Must not be in the future."
+    }
+  },
+  "additionalProperties": false
+}

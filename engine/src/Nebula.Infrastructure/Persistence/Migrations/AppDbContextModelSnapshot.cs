@@ -28,6 +28,163 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Address1")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Address2")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid?>("BrokerOfRecordId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("DeleteReasonCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("DeleteReasonDetail")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DeletedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Industry")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("LegalName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid?>("MergedIntoAccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("DisplayName");
+
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("PrimaryLineOfBusiness")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<Guid?>("PrimaryProducerUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PrimaryState")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("State");
+
+                    b.Property<string>("Region")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime?>("RemovedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("StableDisplayName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("TaxId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("TerritoryCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrokerOfRecordId")
+                        .HasDatabaseName("IX_Accounts_BrokerOfRecordId");
+
+                    b.HasIndex("MergedIntoAccountId")
+                        .HasDatabaseName("IX_Accounts_MergedIntoAccountId");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Accounts_DisplayName_Trgm");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Name"), "gin");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Name"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex("PrimaryProducerUserId");
+
+                    b.HasIndex("Status")
+                        .HasDatabaseName("IX_Accounts_Status");
+
+                    b.HasIndex("TaxId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Accounts_TaxId_Active")
+                        .HasFilter("\"Status\" = 'Active' AND \"TaxId\" IS NOT NULL AND \"IsDeleted\" = false");
+
+                    b.HasIndex("TerritoryCode")
+                        .HasDatabaseName("IX_Accounts_TerritoryCode");
+
+                    b.HasIndex("Status", "Region")
+                        .HasDatabaseName("IX_Accounts_Status_Region");
+
+                    b.ToTable("Accounts", (string)null);
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.AccountContact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -40,41 +197,38 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("DeletedByUserId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Industry")
+                    b.Property<string>("Email")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                    b.Property<bool>("IsPrimary")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
-                    b.Property<string>("PrimaryState")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)");
-
-                    b.Property<string>("Region")
-                        .IsRequired()
+                    b.Property<string>("Phone")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Role")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<uint>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -84,10 +238,53 @@ namespace Nebula.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Region")
-                        .HasDatabaseName("IX_Accounts_Region");
+                    b.HasIndex("AccountId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_AccountContacts_AccountId_Primary")
+                        .HasFilter("\"IsPrimary\" = true AND \"IsDeleted\" = false");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("AccountContacts", (string)null);
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.AccountRelationshipHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ActorUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("EffectiveAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NewValue")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("PreviousValue")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("RelationshipType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId", "EffectiveAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("IX_AccountRelationshipHistory_AccountId_EffectiveAt");
+
+                    b.ToTable("AccountRelationshipHistory", (string)null);
                 });
 
             modelBuilder.Entity("Nebula.Domain.Entities.ActivityTimelineEvent", b =>
@@ -257,6 +454,184 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                     b.ToTable("BrokerRegions", (string)null);
                 });
 
+            modelBuilder.Entity("Nebula.Domain.Entities.CarrierRef", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DeletedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("NaicCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("character varying(160)");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("UX_CarrierRefs_Name");
+
+                    b.ToTable("CarrierRefs", (string)null);
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.CommunicationEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AuthoredByDisplayName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("AuthoredByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Body")
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DeletedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Direction")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int?>("DurationMinutes")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid?>("FollowUpTaskId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsRedacted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastEditedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("LastEditedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Outcome")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<Guid>("PrimaryEntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PrimaryEntityType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime?>("RedactedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RedactedByDisplayName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid?>("RedactedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("RedactionReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("Subject")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthoredByUserId")
+                        .HasDatabaseName("IX_CommunicationEvents_AuthoredByUserId");
+
+                    b.HasIndex("FollowUpTaskId")
+                        .HasDatabaseName("IX_CommunicationEvents_FollowUpTaskId");
+
+                    b.HasIndex("PrimaryEntityType", "PrimaryEntityId", "OccurredAt")
+                        .HasDatabaseName("IX_CommunicationEvents_Entity_OccurredAt");
+
+                    b.ToTable("CommunicationEvents", (string)null);
+                });
+
             modelBuilder.Entity("Nebula.Domain.Entities.Contact", b =>
                 {
                     b.Property<Guid>("Id")
@@ -327,6 +702,46 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                     b.ToTable("Contacts", (string)null);
                 });
 
+            modelBuilder.Entity("Nebula.Domain.Entities.IdempotencyRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ActorUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<string>("Operation")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<Guid?>("ResourceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ResponsePayloadJson")
+                        .HasColumnType("jsonb");
+
+                    b.Property<int>("ResponseStatusCode")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdempotencyKey", "Operation")
+                        .IsUnique()
+                        .HasDatabaseName("IX_IdempotencyRecords_Key_Operation");
+
+                    b.ToTable("IdempotencyRecords", (string)null);
+                });
+
             modelBuilder.Entity("Nebula.Domain.Entities.MGA", b =>
                 {
                     b.Property<Guid>("Id")
@@ -388,15 +803,44 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("AccountDisplayNameAtLink")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("AccountStatusAtRead")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid?>("AccountSurvivorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("BoundAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("BrokerId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Carrier")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<DateTime?>("CancellationEffectiveDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("CancellationReasonCode")
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<string>("CancellationReasonDetail")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CarrierId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -409,7 +853,10 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)")
-                        .HasDefaultValue("Active");
+                        .HasDefaultValue("Pending");
+
+                    b.Property<Guid?>("CurrentVersionId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -423,21 +870,244 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("date");
 
+                    b.Property<DateTime?>("ExpiredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ExternalPolicyReference")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ImportSource")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasDefaultValue("manual");
+
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<DateTime?>("IssuedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("LineOfBusiness")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("PolicyNumber")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
 
-                    b.Property<decimal?>("Premium")
+                    b.Property<Guid?>("PredecessorPolicyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PremiumCurrency")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)")
+                        .HasDefaultValue("USD");
+
+                    b.Property<Guid?>("ProducerUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ReinstatementDeadline")
+                        .HasColumnType("date");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<decimal>("TotalPremium")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Premium");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId")
+                        .HasDatabaseName("IX_Policies_AccountId");
+
+                    b.HasIndex("BrokerId")
+                        .HasDatabaseName("IX_Policies_BrokerId");
+
+                    b.HasIndex("CarrierId")
+                        .HasDatabaseName("IX_Policies_CarrierId");
+
+                    b.HasIndex("CurrentStatus")
+                        .HasDatabaseName("IX_Policies_CurrentStatus");
+
+                    b.HasIndex("CurrentVersionId")
+                        .HasDatabaseName("IX_Policies_CurrentVersionId");
+
+                    b.HasIndex("ExpirationDate")
+                        .HasDatabaseName("IX_Policies_ExpirationDate");
+
+                    b.HasIndex("PolicyNumber")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Policies_PolicyNumber");
+
+                    b.HasIndex("PredecessorPolicyId");
+
+                    b.HasIndex("ProducerUserId");
+
+                    b.ToTable("Policies", (string)null);
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.PolicyCoverageLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CoverageCode")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("CoverageName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal?>("Deductible")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DeletedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ExposureBasis")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<decimal?>("ExposureQuantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsCurrent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<decimal>("Limit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("PolicyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PolicyVersionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Premium")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("PremiumCurrency")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)")
+                        .HasDefaultValue("USD");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("VersionNumber")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PolicyVersionId");
+
+                    b.HasIndex("PolicyId", "IsCurrent")
+                        .HasDatabaseName("IX_PolicyCoverageLines_PolicyId_IsCurrent");
+
+                    b.ToTable("PolicyCoverageLines", (string)null);
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.PolicyEndorsement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DeletedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("EffectiveDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("EndorsementNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("EndorsementReasonCode")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<string>("EndorsementReasonDetail")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<Guid>("PolicyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PolicyVersionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PremiumCurrency")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)")
+                        .HasDefaultValue("USD");
+
+                    b.Property<decimal>("PremiumDelta")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<uint>("RowVersion")
@@ -454,18 +1124,99 @@ namespace Nebula.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("PolicyVersionId");
 
-                    b.HasIndex("BrokerId");
-
-                    b.HasIndex("ExpirationDate")
-                        .HasDatabaseName("IX_Policies_ExpirationDate");
-
-                    b.HasIndex("PolicyNumber")
+                    b.HasIndex("PolicyId", "EndorsementNumber")
                         .IsUnique()
-                        .HasDatabaseName("IX_Policies_PolicyNumber");
+                        .HasDatabaseName("UX_PolicyEndorsements_PolicyId_EndorsementNumber");
 
-                    b.ToTable("Policies", (string)null);
+                    b.ToTable("PolicyEndorsements", (string)null);
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.PolicyVersion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CoverageSnapshotJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DeletedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("EffectiveDate")
+                        .HasColumnType("date");
+
+                    b.Property<Guid?>("EndorsementId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<Guid>("PolicyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PremiumCurrency")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)")
+                        .HasDefaultValue("USD");
+
+                    b.Property<string>("PremiumSnapshotJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("ProfileSnapshotJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<decimal>("TotalPremium")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("VersionNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("VersionReason")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PolicyId", "VersionNumber")
+                        .IsUnique()
+                        .HasDatabaseName("UX_PolicyVersions_PolicyId_VersionNumber");
+
+                    b.ToTable("PolicyVersions", (string)null);
                 });
 
             modelBuilder.Entity("Nebula.Domain.Entities.Program", b =>
@@ -790,7 +1541,20 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("AccountDisplayNameAtLink")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AccountStatusAtRead")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid?>("AccountSurvivorId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("AssignedToUserId")
@@ -901,7 +1665,20 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("AccountDisplayNameAtLink")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AccountStatusAtRead")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid?>("AccountSurvivorId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("AssignedToUserId")
@@ -1359,6 +2136,52 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                     b.ToTable("WorkflowTransitions", (string)null);
                 });
 
+            modelBuilder.Entity("Nebula.Domain.Entities.Account", b =>
+                {
+                    b.HasOne("Nebula.Domain.Entities.Broker", "BrokerOfRecord")
+                        .WithMany()
+                        .HasForeignKey("BrokerOfRecordId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Nebula.Domain.Entities.Account", "MergedInto")
+                        .WithMany("MergedAccounts")
+                        .HasForeignKey("MergedIntoAccountId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Nebula.Domain.Entities.UserProfile", "PrimaryProducer")
+                        .WithMany()
+                        .HasForeignKey("PrimaryProducerUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("BrokerOfRecord");
+
+                    b.Navigation("MergedInto");
+
+                    b.Navigation("PrimaryProducer");
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.AccountContact", b =>
+                {
+                    b.HasOne("Nebula.Domain.Entities.Account", "Account")
+                        .WithMany("AccountContacts")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.AccountRelationshipHistory", b =>
+                {
+                    b.HasOne("Nebula.Domain.Entities.Account", "Account")
+                        .WithMany("RelationshipHistory")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("Nebula.Domain.Entities.Broker", b =>
                 {
                     b.HasOne("Nebula.Domain.Entities.MGA", "Mga")
@@ -1418,9 +2241,80 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Nebula.Domain.Entities.CarrierRef", "Carrier")
+                        .WithMany()
+                        .HasForeignKey("CarrierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Nebula.Domain.Entities.Policy", "PredecessorPolicy")
+                        .WithMany()
+                        .HasForeignKey("PredecessorPolicyId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Nebula.Domain.Entities.UserProfile", "Producer")
+                        .WithMany()
+                        .HasForeignKey("ProducerUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Account");
 
                     b.Navigation("Broker");
+
+                    b.Navigation("Carrier");
+
+                    b.Navigation("PredecessorPolicy");
+
+                    b.Navigation("Producer");
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.PolicyCoverageLine", b =>
+                {
+                    b.HasOne("Nebula.Domain.Entities.Policy", "Policy")
+                        .WithMany("CoverageLines")
+                        .HasForeignKey("PolicyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Nebula.Domain.Entities.PolicyVersion", "PolicyVersion")
+                        .WithMany("CoverageLines")
+                        .HasForeignKey("PolicyVersionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Policy");
+
+                    b.Navigation("PolicyVersion");
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.PolicyEndorsement", b =>
+                {
+                    b.HasOne("Nebula.Domain.Entities.Policy", "Policy")
+                        .WithMany("Endorsements")
+                        .HasForeignKey("PolicyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Nebula.Domain.Entities.PolicyVersion", "PolicyVersion")
+                        .WithMany()
+                        .HasForeignKey("PolicyVersionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Policy");
+
+                    b.Navigation("PolicyVersion");
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.PolicyVersion", b =>
+                {
+                    b.HasOne("Nebula.Domain.Entities.Policy", "Policy")
+                        .WithMany("Versions")
+                        .HasForeignKey("PolicyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Policy");
                 });
 
             modelBuilder.Entity("Nebula.Domain.Entities.Program", b =>
@@ -1517,11 +2411,34 @@ namespace Nebula.Infrastructure.Persistence.Migrations
                     b.Navigation("Program");
                 });
 
+            modelBuilder.Entity("Nebula.Domain.Entities.Account", b =>
+                {
+                    b.Navigation("AccountContacts");
+
+                    b.Navigation("MergedAccounts");
+
+                    b.Navigation("RelationshipHistory");
+                });
+
             modelBuilder.Entity("Nebula.Domain.Entities.Broker", b =>
                 {
                     b.Navigation("BrokerRegions");
 
                     b.Navigation("Contacts");
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.Policy", b =>
+                {
+                    b.Navigation("CoverageLines");
+
+                    b.Navigation("Endorsements");
+
+                    b.Navigation("Versions");
+                });
+
+            modelBuilder.Entity("Nebula.Domain.Entities.PolicyVersion", b =>
+                {
+                    b.Navigation("CoverageLines");
                 });
 #pragma warning restore 612, 618
         }

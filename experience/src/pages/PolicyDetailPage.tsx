@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Save } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ErrorFallback } from '@/components/ui/ErrorFallback';
 import { Modal } from '@/components/ui/Modal';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -26,6 +27,7 @@ import {
   type PolicyCoverageInputDto,
 } from '@/features/policies';
 import { ApiError } from '@/services/api';
+import { CommunicationFeed } from '@/features/communications';
 
 export default function PolicyDetailPage() {
   const { policyId = '' } = useParams<{ policyId: string }>();
@@ -226,6 +228,13 @@ export default function PolicyDetailPage() {
         />
 
         <ParentDocumentsPanel parent={{ type: 'policy', id: policy.id }} />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Communications</CardTitle>
+          </CardHeader>
+          <CommunicationFeed entityType="Policy" entityId={policy.id} />
+        </Card>
 
         <ActionModal open={action === 'issue'} title="Issue policy" onClose={() => setAction(null)} onSave={runIssue} busy={issuePolicy.isPending} error={actionError}>
           <p className="text-sm text-text-secondary">

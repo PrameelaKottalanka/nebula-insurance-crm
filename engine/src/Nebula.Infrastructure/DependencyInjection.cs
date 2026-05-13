@@ -29,6 +29,7 @@ public static class DependencyInjection
         services.AddScoped<ISubmissionDocumentChecklistReader, UnavailableSubmissionDocumentChecklistReader>();
         services.AddScoped<IDashboardRepository, DashboardRepository>();
         services.AddScoped<IIdempotencyStore, IdempotencyStore>();
+        services.AddScoped<ICommunicationEventRepository, CommunicationEventRepository>();
         services.AddSingleton<IDocumentConfigurationProvider, YamlDocumentConfigurationProvider>();
         services.AddScoped<IDocumentParentAccessResolver, DocumentParentAccessResolver>();
         services.AddScoped<IDocumentClassificationGate, DocumentClassificationGate>();

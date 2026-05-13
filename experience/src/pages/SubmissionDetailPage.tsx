@@ -29,6 +29,7 @@ import {
 } from '@/features/submissions';
 import type { SubmissionDto, SubmissionStatus } from '@/features/submissions';
 import { ApiError } from '@/services/api';
+import { CommunicationFeed } from '@/features/communications';
 
 interface SubmissionEditForm {
   programId: string;
@@ -375,6 +376,13 @@ export default function SubmissionDetailPage() {
         </Card>
 
         <ParentDocumentsPanel parent={{ type: 'submission', id: submission.id }} />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Communications</CardTitle>
+          </CardHeader>
+          <CommunicationFeed entityType="Submission" entityId={submission.id} />
+        </Card>
 
         <Card>
           <CardHeader>

@@ -21,15 +21,16 @@ This document is the working prioritization view for feature sequencing.
 | Feature | Phase | Why Now |
 |---------|-------|---------|
 | [F0034 - Product Schema Registry and Dynamic LOB Attributes](./F0034-product-schema-registry-and-dynamic-lob-attributes/README.md) | Platform Foundation / CRM Release MVP Enabler | Establishes JSON Schema based product attributes and dynamic forms before F0019, F0022, and reporting work add product-specific fields that would otherwise become frontend, backend, and database debt. |
+| [F0021 — Communication Hub & Activity Capture](./F0021-communication-hub-and-activity-capture/README.md) | CRM Release MVP | PM planning complete (7 stories defined 2026-05-06). Dependencies F0016 and F0004 are archived. Ready for implementation. |
 
-**Implementation Readiness Note:** F0034 was promoted to Now on 2026-05-06 as the next planning/implementation foundation after F0020 completed. Product Manager planning should expand the minimal PRD before implementation starts.
+**Implementation Readiness Note:** F0034 was promoted to Now on 2026-05-06. F0021 promoted to Now on 2026-05-06 following completion of PM planning (7 stories defined, dependencies confirmed).
 
 ## Next
 
 | Feature | Phase | Why Next |
 |---------|-------|----------|
 | [F0019 — Submission Quoting, Proposal & Approval Workflow](./F0019-submission-quoting-proposal-and-approval/README.md) | CRM Release MVP | Completes intake-to-quote-to-bind operations after F0020 provides document foundations and F0034 provides the product-attribute foundation needed for quote/proposal data. |
-| [F0021 — Communication Hub & Activity Capture](./F0021-communication-hub-and-activity-capture/README.md) | CRM Release MVP | Creates the communication system of record for broker interactions, underwriting follow-up, and audit history. |
+| [F0021 — Communication Hub & Activity Capture](./F0021-communication-hub-and-activity-capture/README.md) | CRM Release MVP | Promoted to Now (2026-05-06) — PM planning complete. See Now section. |
 | [F0022 — Work Queues, Assignment Rules & Coverage Management](./F0022-work-queues-assignment-rules-and-coverage-management/README.md) | CRM Release MVP | Adds operational routing, backup coverage, and workload balancing beyond personal task lists. |
 | [F0023 — Global Search, Saved Views & Operational Reporting](./F0023-global-search-saved-views-and-operational-reporting/README.md) | CRM Release MVP | Provides cross-object findability, operational visibility, and daily management reporting required for adoption. |
 | [F0031 — Data Import, Deduplication & Go-Live Migration](./F0031-data-import-deduplication-and-go-live-migration/README.md) | Release Enablement | Required for production rollout even though it is not the most visible product module. |

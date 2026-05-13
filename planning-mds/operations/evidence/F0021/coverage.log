@@ -1,0 +1,14 @@
+RUN v2.1.9 E:/projects/nebula-insurance-crm/experience
+      Coverage enabled with v8
+
+ Test Files  33 passed (33)
+      Tests  158 passed (158)
+
+Coverage report from v8
+All files          | 69.99 | 77.63 | 66.74 | 69.99
+
+F0021 communications feature coverage:
+ src/features/communications (all components/hooks/tests)
+  components | 99.10 | 91.15 | 65.90 | 99.10
+  hooks      | 91.30 | 100   | 93.33 | 91.30
+  tests      | 100   | 98.57 | 100   | 100

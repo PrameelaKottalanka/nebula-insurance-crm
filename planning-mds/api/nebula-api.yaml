@@ -41,6 +41,8 @@ tags:
     description: Document storage, classification, versioning, and parent linkage (F0020). See ADR-012 + ADR-019.
   - name: DocumentTemplates
     description: Reusable document templates (F0020-S0012). Materialise into a parent record to start from a boilerplate.
+  - name: Communications
+    description: Communication event log, feed, edit, redact, and follow-up (F0021)
 
 paths:
   # ──────────────────────────────────────────────────────────────
@@ -3214,6 +3216,271 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
+  # ──────────────────────────────────────────────────────────────
+  # Communication endpoints (F0021)
+  # ──────────────────────────────────────────────────────────────
+  /communications:
+    post:
+      operationId: logCommunication
+      summary: Log a communication event
+      description: >
+        Creates a Note, Call, or Meeting communication event linked to a CRM entity
+        (Broker, Account, Submission, Policy, or Renewal). Atomically appends a
+        CommunicationLogged ActivityTimelineEvent to the linked entity.
+        BrokerUser role receives 403. The authenticated user must have read access
+        to the linked entity.
+      tags: [Communications]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicationLogRequest"
+      responses:
+        "201":
+          description: Communication event created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommunicationEventSummary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: Linked entity not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+              example:
+                type: "https://docs.nebula.local/errors/entity-not-found"
+                title: "Entity not found"
+                status: 404
+                code: "entity_not_found"
+
+    get:
+      operationId: listCommunications
+      summary: List communication events for an entity
+      description: >
+        Returns a paginated, newest-first list of communication events linked to the
+        specified entity. Events are sorted by occurredAt descending. BrokerUser role
+        receives 403. The authenticated user must have read access to the entity.
+        Default pageSize is 25; maximum is 100.
+      tags: [Communications]
+      parameters:
+        - name: entityType
+          in: query
+          required: true
+          description: "The type of CRM entity to query communications for."
+          schema:
+            type: string
+            enum: [Broker, Account, Submission, Policy, Renewal]
+        - name: entityId
+          in: query
+          required: true
+          description: "The UUID of the linked entity."
+          schema:
+            type: string
+            format: uuid
+        - $ref: "#/components/parameters/Page"
+        - name: pageSize
+          in: query
+          required: false
+          description: "Number of results per page. Default 25, max 100."
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 25
+      responses:
+        "200":
+          description: Paginated communication event list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedCommunicationList"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: Linked entity not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /communications/{communicationId}:
+    parameters:
+      - name: communicationId
+        in: path
+        required: true
+        description: "UUID of the communication event."
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      operationId: getCommunication
+      summary: Get a communication event by ID
+      description: >
+        Returns a single communication event. BrokerUser role receives 403.
+        The authenticated user must have read access to the linked entity.
+      tags: [Communications]
+      responses:
+        "200":
+          description: Communication event detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommunicationEventSummary"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      operationId: editCommunication
+      summary: Edit a communication event
+      description: >
+        Updates one or more fields on a communication event. The author may edit
+        their own event within 24 hours of creation (error code: edit_window_expired
+        after the window). Admin role may edit any event at any time regardless of
+        authorship or age. Redacted events cannot be edited (409 event_redacted).
+        At least one field must be provided in the request body (400 no_changes).
+      tags: [Communications]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicationEditRequest"
+      responses:
+        "200":
+          description: Communication event updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommunicationEventSummary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          description: >
+            Forbidden. Possible codes: policy_denied (BrokerUser or no permission),
+            not_author (non-Admin editing another user's event),
+            edit_window_expired (non-Admin editing past 24h window).
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: >
+            Conflict. Code: event_redacted — redacted events cannot be edited.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /communications/{communicationId}/redact:
+    parameters:
+      - name: communicationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    post:
+      operationId: redactCommunication
+      summary: Redact the body of a communication event (Admin only)
+      description: >
+        Clears the body of a communication event and records the redaction reason
+        for compliance. Admin role only. Redaction is irreversible in MVP —
+        there is no un-redact endpoint. Atomically appends a CommunicationRedacted
+        ActivityTimelineEvent. Returns 409 if already redacted (code: already_redacted).
+      tags: [Communications]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicationRedactRequest"
+      responses:
+        "200":
+          description: Communication event redacted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommunicationEventSummary"
+        "400":
+          description: "Bad request. Code: reason_required."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        "403":
+          description: "Forbidden. Code: policy_denied — non-Admin role."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: "Conflict. Code: already_redacted."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /communications/{communicationId}/follow-up:
+    parameters:
+      - name: communicationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    post:
+      operationId: createCommunicationFollowUp
+      summary: Create a follow-up task linked to a communication event
+      description: >
+        Creates a TaskItem with LinkedEntityType="CommunicationEvent" and
+        LinkedEntityId=communicationId, then sets CommunicationEvent.FollowUpTaskId
+        to the new task ID. Only one follow-up per event in MVP — returns 409
+        (code: follow_up_exists) if FollowUpTaskId is already set.
+        AssignedToUserId defaults to the authenticated user if not provided.
+      tags: [Communications]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicationFollowUpRequest"
+      responses:
+        "201":
+          description: Follow-up task created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskSummary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: "Conflict. Code: follow_up_exists — a follow-up task is already linked."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -6364,3 +6631,219 @@ components:
             page: { type: integer, minimum: 1 }
             pageSize: { type: integer, minimum: 1, maximum: 100 }
             total: { type: integer, minimum: 0 }
+
+    # ── F0021 Communication schemas ───────────────────────────────────────────
+
+    CommunicationLogRequest:
+      type: object
+      required: [eventType, body, primaryEntityType, primaryEntityId]
+      properties:
+        eventType:
+          type: string
+          enum: [Note, Call, Meeting]
+        direction:
+          type: string
+          nullable: true
+          enum: [Inbound, Outbound, Internal]
+          description: "Required for Call (Inbound|Outbound) and Meeting (all three). Must be absent/null for Note."
+        durationMinutes:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 600
+          description: "Required for Call and Meeting. Must be absent/null for Note."
+        subject:
+          type: string
+          nullable: true
+          maxLength: 200
+        body:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        outcome:
+          type: string
+          nullable: true
+          maxLength: 1000
+          description: "Optional. Applicable to Call and Meeting."
+        occurredAt:
+          type: string
+          nullable: true
+          format: date-time
+          description: "ISO 8601 UTC. Defaults to server UtcNow. Must not be in the future."
+        primaryEntityType:
+          type: string
+          enum: [Broker, Account, Submission, Policy, Renewal]
+        primaryEntityId:
+          type: string
+          format: uuid
+      additionalProperties: false
+
+    CommunicationEditRequest:
+      type: object
+      description: "At least one field must be provided (400 no_changes if all are absent/null)."
+      properties:
+        body:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 4000
+        subject:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 200
+        outcome:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 1000
+        occurredAt:
+          type: string
+          nullable: true
+          format: date-time
+          description: "Must not be in the future."
+      additionalProperties: false
+
+    CommunicationRedactRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: "Mandatory explanation stored for compliance. Error code: reason_required."
+      additionalProperties: false
+
+    CommunicationFollowUpRequest:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 500
+        dueDate:
+          type: string
+          nullable: true
+          format: date
+        assignedToUserId:
+          type: string
+          nullable: true
+          format: uuid
+          description: "Defaults to the authenticated user's UserId if omitted."
+        priority:
+          type: string
+          nullable: true
+          enum: [Low, Normal, High, Urgent]
+          default: Normal
+      additionalProperties: false
+
+    CommunicationEventSummary:
+      type: object
+      required:
+        - id
+        - eventType
+        - occurredAt
+        - primaryEntityType
+        - primaryEntityId
+        - authoredByUserId
+        - authoredByDisplayName
+        - isRedacted
+      properties:
+        id:
+          type: string
+          format: uuid
+        eventType:
+          type: string
+          enum: [Note, Call, Meeting]
+        direction:
+          type: string
+          nullable: true
+          enum: [Inbound, Outbound, Internal]
+        durationMinutes:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 600
+        subject:
+          type: string
+          nullable: true
+          maxLength: 200
+        body:
+          type: string
+          nullable: true
+          maxLength: 4000
+          description: "null when isRedacted=true."
+        outcome:
+          type: string
+          nullable: true
+          maxLength: 1000
+          description: "null when isRedacted=true."
+        occurredAt:
+          type: string
+          format: date-time
+        primaryEntityType:
+          type: string
+          enum: [Broker, Account, Submission, Policy, Renewal]
+        primaryEntityId:
+          type: string
+          format: uuid
+        authoredByUserId:
+          type: string
+          format: uuid
+        authoredByDisplayName:
+          type: string
+          description: "Snapshotted at creation. Stable if UserProfile changes."
+        lastEditedAt:
+          type: string
+          nullable: true
+          format: date-time
+          description: "null until first edit."
+        isRedacted:
+          type: boolean
+        redactedByDisplayName:
+          type: string
+          nullable: true
+        redactedAt:
+          type: string
+          nullable: true
+          format: date-time
+        redactionReason:
+          type: string
+          nullable: true
+          maxLength: 500
+          description: "Included only in Admin role responses."
+        followUpTaskId:
+          type: string
+          nullable: true
+          format: uuid
+        followUpTaskTitle:
+          type: string
+          nullable: true
+        followUpTaskStatus:
+          type: string
+          nullable: true
+          description: "e.g. 'Open' or 'Done'. Used by frontend to render completed task style."
+
+    PaginatedCommunicationList:
+      type: object
+      required: [data, page, pageSize, totalCount, totalPages]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/CommunicationEventSummary"
+        page:
+          type: integer
+          minimum: 1
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 100
+        totalCount:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0

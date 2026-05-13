@@ -29,6 +29,7 @@ import {
 } from '@/features/renewals';
 import { AssigneePicker, type UserSummaryDto } from '@/features/tasks';
 import { ApiError } from '@/services/api';
+import { CommunicationFeed } from '@/features/communications';
 
 interface TransitionFormState {
   reason: string;
@@ -413,6 +414,13 @@ export default function RenewalDetailPage() {
         </div>
 
         <ParentDocumentsPanel parent={{ type: 'renewal', id: renewal.id }} />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Communications</CardTitle>
+          </CardHeader>
+          <CommunicationFeed entityType="Renewal" entityId={renewal.id} />
+        </Card>
 
         <Card>
           <CardHeader>

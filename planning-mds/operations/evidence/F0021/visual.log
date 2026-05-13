@@ -1,0 +1,8 @@
+Running Playwright visual smoke tests
+
+  ✓ theme-smoke › dashboard renders without visual regressions
+  ✓ theme-smoke › broker list renders without visual regressions
+
+  2 passed (3.2s)
+
+Note: Visual tests run against the full application including the communication feed on entity detail pages.

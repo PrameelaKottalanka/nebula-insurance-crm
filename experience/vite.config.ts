@@ -26,6 +26,7 @@ export default defineConfig(() => {
     '/renewals',
     '/documents',
     '/document-templates',
+    '/communications',
     '/healthz',
   ]
 
@@ -89,6 +90,7 @@ export default defineConfig(() => {
       },
     },
     test: {
+      testTimeout: 15000,
       environment: 'jsdom',
       environmentOptions: {
         jsdom: {

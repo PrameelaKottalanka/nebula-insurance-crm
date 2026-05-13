@@ -2230,3 +2230,36 @@ node_bindings:
         infrastructure:
           - engine/src/Nebula.Infrastructure/Persistence/Configurations/SubmissionConfiguration.cs
           - engine/src/Nebula.Infrastructure/Persistence/Configurations/RenewalConfiguration.cs
+
+  - id: entity:communication-event
+    paths:
+      backend:
+        domain:
+          - engine/src/Nebula.Domain/Entities/CommunicationEvent.cs
+        application:
+          - engine/src/Nebula.Application/DTOs/CommunicationDtos.cs
+          - engine/src/Nebula.Application/Interfaces/ICommunicationEventRepository.cs
+          - engine/src/Nebula.Application/Services/CommunicationEventService.cs
+          - engine/src/Nebula.Application/Validators/CommunicationValidators.cs
+        infrastructure:
+          - engine/src/Nebula.Infrastructure/Repositories/CommunicationEventRepository.cs
+          - engine/src/Nebula.Infrastructure/Persistence/Configurations/CommunicationEventConfiguration.cs
+          - engine/src/Nebula.Infrastructure/Persistence/Migrations/20260508010847_F0021_AddCommunicationEvents.cs
+        api:
+          - engine/src/Nebula.Api/Endpoints/CommunicationEndpoints.cs
+        tests:
+          - engine/tests/Nebula.Tests/Integration/CommunicationEndpointTests.cs
+          - engine/tests/Nebula.Tests/Unit/CommunicationEventServiceTests.cs
+      frontend:
+        feature:
+          - experience/src/features/communications/**
+        pages:
+          - experience/src/pages/AccountDetailPage.tsx
+          - experience/src/pages/BrokerDetailPage.tsx
+          - experience/src/pages/PolicyDetailPage.tsx
+          - experience/src/pages/RenewalDetailPage.tsx
+          - experience/src/pages/SubmissionDetailPage.tsx
+        tests:
+          - experience/src/features/communications/tests/CommunicationEventCard.test.tsx
+          - experience/src/features/communications/tests/CommunicationFeed.test.tsx
+          - experience/src/features/communications/tests/LogCommunicationModal.test.tsx

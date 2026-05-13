@@ -184,6 +184,42 @@ public static class ProblemDetailsHelper
         statusCode: 412,
         extensions: Ext("precondition_failed"));
 
+    public static IResult EventRedacted() => Results.Problem(
+        title: "Event is redacted",
+        detail: "Redacted communication events cannot be edited.",
+        statusCode: 409,
+        extensions: Ext("event_redacted"));
+
+    public static IResult AlreadyRedacted() => Results.Problem(
+        title: "Already redacted",
+        detail: "This communication event has already been redacted.",
+        statusCode: 409,
+        extensions: Ext("already_redacted"));
+
+    public static IResult NotAuthor() => Results.Problem(
+        title: "Not the author",
+        detail: "Only the author or an Admin may edit a communication event.",
+        statusCode: 403,
+        extensions: Ext("not_author"));
+
+    public static IResult EditWindowExpired() => Results.Problem(
+        title: "Edit window expired",
+        detail: "Communication events can only be edited within 24 hours of creation.",
+        statusCode: 403,
+        extensions: Ext("edit_window_expired"));
+
+    public static IResult FollowUpExists() => Results.Problem(
+        title: "Follow-up already exists",
+        detail: "A follow-up task is already linked to this communication event.",
+        statusCode: 409,
+        extensions: Ext("follow_up_exists"));
+
+    public static IResult NoChanges() => Results.Problem(
+        title: "No changes provided",
+        detail: "At least one field must be provided in the request body.",
+        statusCode: 400,
+        extensions: Ext("no_changes"));
+
     private static Dictionary<string, object?> Ext(string code) => new()
     {
         ["code"] = code,

@@ -135,7 +135,7 @@ def validate_manifest(data: Dict, root: Path) -> List[str]:
         layer_artifacts[layer_name] = validate_layer(root, layer_name, layer, errors)
 
     coverage_paths = {
-        str(normalize_repo_path(path_value, root).relative_to(root))
+        normalize_repo_path(path_value, root).relative_to(root).as_posix()
         for path_value in layer_artifacts.get("coverage", [])
     }
     for generated_artifact in GENERATED_COVERAGE_ARTIFACTS:

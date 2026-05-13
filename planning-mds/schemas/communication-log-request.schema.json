@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nebula.local/schemas/communication-log-request.schema.json",
+  "title": "CommunicationLogRequest",
+  "description": "Validation rules for logging a communication event (Note, Call, or Meeting). F0021-S0001/S0002/S0003. Conditional rules for direction/duration are enforced by FluentValidation on the backend and custom form logic on the frontend; this schema enforces structural types and length constraints only.",
+  "type": "object",
+  "required": ["eventType", "body", "primaryEntityType", "primaryEntityId"],
+  "properties": {
+    "eventType": {
+      "type": "string",
+      "enum": ["Note", "Call", "Meeting"],
+      "description": "Type of communication event."
+    },
+    "direction": {
+      "type": ["string", "null"],
+      "enum": ["Inbound", "Outbound", "Internal", null],
+      "description": "Required for Call (Inbound|Outbound only) and Meeting (Inbound|Outbound|Internal). Must be null for Note."
+    },
+    "durationMinutes": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "maximum": 600,
+      "description": "Required for Call and Meeting (1–600 minutes). Must be null for Note."
+    },
+    "subject": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Optional short title. All event types."
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "description": "Required free-text content. All event types."
+    },
+    "outcome": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "maxLength": 1000,
+      "description": "Optional result or next step. Applicable to Call and Meeting."
+    },
+    "occurredAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the interaction occurred (ISO 8601 UTC). Defaults to server UtcNow if omitted. Must not be in the future."
+    },
+    "primaryEntityType": {
+      "type": "string",
+      "enum": ["Broker", "Account", "Submission", "Policy", "Renewal"],
+      "description": "The type of CRM entity this communication is logged against."
+    },
+    "primaryEntityId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The ID of the linked entity."
+    }
+  },
+  "additionalProperties": false
+}

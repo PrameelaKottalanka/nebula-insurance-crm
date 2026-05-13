@@ -39,10 +39,11 @@ import { RenewalStatusBadge, useRenewals } from '@/features/renewals';
 import { SubmissionStatusBadge, useSubmissions } from '@/features/submissions';
 import { AssigneePicker, type UserSummaryDto } from '@/features/tasks';
 import { ActivityFeedItem } from '@/features/timeline/components/ActivityFeedItem';
+import { CommunicationFeed } from '@/features/communications';
 import { ApiError } from '@/services/api';
 import { US_STATES } from '@/lib/us-states';
 
-const TABS = ['Overview', 'Contacts', 'Documents', 'Activity'];
+const TABS = ['Overview', 'Contacts', 'Documents', 'Communications', 'Activity'];
 const DELETE_REASON_OPTIONS = [
   { value: 'Duplicate', label: 'Duplicate' },
   { value: 'NoLongerInsured', label: 'No Longer Insured' },
@@ -721,6 +722,10 @@ export default function AccountDetailPage() {
                 parent={{ type: 'account', id: account.id }}
                 variant="plain"
               />
+            )}
+
+            {activeTab === 'Communications' && (
+              <CommunicationFeed entityType="Account" entityId={accountId} />
             )}
 
             {activeTab === 'Activity' && (

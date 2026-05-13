@@ -1,0 +1,26 @@
+meta {
+  name: Redact Communication
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/communications/{{communicationId}}/redact
+  auth: bearer
+  body: json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "reason": "Contains personally identifiable information that must not be retained."
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.isRedacted: eq true
+}
